@@ -1,42 +1,41 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar'; 
-import Hero from './components/Hero'; 
-import ProblemSection from './components/ProblemSection';
-import HowItWorks from './components/HowItWorks';
-import Pricing from './components/Pricing';
-import Testimonials from './components/Testimonials';
-import Footer from './components/Footer';
+import ReactDOM from 'react-dom/client'; // Missing this!
+import { Routes, Route, BrowserRouter } from 'react-router-dom'; // Added BrowserRouter
+import Home from './components/Home'
+import Onboarding from './components/Onboarding';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import BusinessJourney from './pages/BusinessJourney';
+import IdeaStage from './pages/IdeaStage';
+import Industry from './pages/Industry';
+import EarlyStage from './pages/EarlyStage';
+import GrowthStage from './pages/GrowthStage';
+import FinishSetup from './pages/FinishSetup';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
+// 1. Define the App component first
 function App() {
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
-      <Navbar />
       <main>
         <Routes>
-          {/* Landing Page Route */}
-          <Route path="/" element={
-            <>
-              <Hero />
-              <ProblemSection />
-              <HowItWorks />
-              <Pricing />
-              <Testimonials />
-            </>
-          } />
-
-          {/* Login Page Route */}
+          <Route path="/" element={<Home />} />
+          <Route path="/IdeaStage" element={<IdeaStage />} />
+          <Route path="/Onboarding" element={<Onboarding />} />
+          <Route path="/BusinessJourney" element={<BusinessJourney />} />
+          <Route path="/Industry" element={<Industry />} />
           <Route path="/login" element={<Login />} />
-
-          {/* Signup Page Route */}
+          <Route path="/EarlyStage" element={<EarlyStage />} />
+          <Route path="/GrowthStage" element={<GrowthStage />} />
+          <Route path="/FinishSetup" element={<FinishSetup />} />
           <Route path="/signup" element={<Signup />} />
         </Routes>
       </main>
-      <Footer />
     </div>
   );
 }
+
+// 2. Render it to the DOM
+
 
 export default App;
