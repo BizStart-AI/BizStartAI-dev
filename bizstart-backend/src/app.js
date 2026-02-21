@@ -3,10 +3,24 @@ const cors = require("cors");
 
 const app = express();
 
-//  CORS configuration (must come before routes)
+// CORS configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "*",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like Postman or mobile apps)
+      if (!origin) return callback(null, true);
+
+      // Allow specific frontend URL if set
+      if (process.env.FRONTEND_URL) {
+        if (origin === process.env.FRONTEND_URL) {
+          return callback(null, true);
+        }
+        return callback(new Error("Not allowed by CORS"));
+      }
+
+      // If no FRONTEND_URL is set (development), allow all
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
@@ -23,9 +37,13 @@ const authRoutes = require("./routes/auth.routes");
 const conversationRoutes = require("./routes/conversation.routes");
 const messageRoutes = require("./routes/message.routes");
 
+const userRoutes = require("./routes/user.routes");
+
+
 app.use("/api/auth", authRoutes);
 app.use("/api/conversations", conversationRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
 
 // Test protected route
 const authenticate = require("./middleware/auth.middleware");

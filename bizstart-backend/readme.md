@@ -65,6 +65,11 @@ bizstart-backend/
 │   │   ├── auth.controller.js
 │   │   ├── conversation.controller.js
 │   │   └── message.controller.js
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── conversation.routes.js
+│   │   ├── message.routes.js
+│   │   └── user.routes.js
 │   ├── middleware/
 │   │   ├── auth.middleware.js
 │   │   ├── error.middleware.js

@@ -1,38 +1,41 @@
-// src/services/ai.service.js
 const axios = require("axios");
 
-const generateAIResponse = async (prompt) => {
+const generateAIResponse = async (messages) => {
   try {
-    // If AI_SERVICE_URL exists, call real AI service
-    if (process.env.AI_SERVICE_URL) {
-      const response = await axios.post(
-        process.env.AI_SERVICE_URL,
-        { prompt },
-        {
-          headers: process.env.HF_API_KEY
-            ? {
-                Authorization: `Bearer ${process.env.HF_API_KEY}`,
-              }
-            : {},
-        }
-      );
-
+    // If AI service is not configured → fallback
+    if (!process.env.AI_SERVICE_URL) {
       return {
-        text: response.data.text || response.data.generated_text,
-        tokens_used: prompt.length,
+        text: `Mock AI response to: "${messages[messages.length - 1].content}"`,
+        tokens_used: null,
       };
     }
 
-    // Fallback mock (development mode)
+    const response = await axios.post(
+      process.env.AI_SERVICE_URL,
+      { messages }, // adapt later if they require different format
+      {
+        headers: {
+          "Content-Type": "application/json",
+          ...(process.env.AI_SERVICE_KEY && {
+            Authorization: `Bearer ${process.env.AI_SERVICE_KEY}`,
+          }),
+        },
+        timeout: 15000,
+      }
+    );
+
     return {
-      text: `AI response to: "${prompt}"`,
-      tokens_used: prompt.length,
+      text: response.data.response || response.data.text,
+      tokens_used: response.data.tokens_used || null,
     };
 
   } catch (error) {
+    console.error("AI Service error:", error.response?.data || error.message);
     throw new Error("AI service unavailable");
   }
 };
 
 module.exports = { generateAIResponse };
+
+
 
