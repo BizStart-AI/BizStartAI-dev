@@ -11,6 +11,7 @@ import Industry from './pages/Industry';
 import EarlyStage from './pages/EarlyStage';
 import GrowthStage from './pages/GrowthStage';
 import FinishSetup from './pages/FinishSetup';
+import Dashboard from './pages/Dashboard';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // 1. Define the App component first
@@ -29,6 +30,7 @@ function App() {
           <Route path="/GrowthStage" element={<GrowthStage />} />
           <Route path="/FinishSetup" element={<FinishSetup />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/Dashboard" element={<Dashboard />} />
         </Routes>
       </main>
     </div>
