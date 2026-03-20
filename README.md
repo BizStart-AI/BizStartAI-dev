@@ -1,4 +1,4 @@
-# BizStartAI: Your AI-Powered Business Paddy.
+# BizStartAI: Your AI-Powered Business Paddy
 
 BizStartAI is a premium, AI-driven platform designed to empower aspiring entrepreneurs and business owners. It acts as a comprehensive "Business Paddy," providing expert mentorship, detailed market insights, and a structured journey from initial idea to a full-fledged business plan. By leveraging advanced generative AI (Google Gemini), BizStartAI simplifies the complexities of starting a business, making professional guidance accessible to everyone.
 
