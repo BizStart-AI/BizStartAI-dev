@@ -61,17 +61,17 @@ app.post('/api/recommendations', async (req, res, next) => {
     const { industry, stage } = req.body;
 
     const recommendations = [
-      { 
-        title: 'Market Entry Strategy', 
-        description: `Learn how to find customers for your ${industry || 'new'} business.`, 
-        lessons: 5, 
+      {
+        title: 'Market Entry Strategy',
+        description: `Learn how to find customers for your ${industry || 'new'} business.`,
+        lessons: 5,
         duration: 25,
         level: 'Beginner'
       },
-      { 
-        title: 'Scaling Operations', 
-        description: `Build a solid growth plan for your ${stage || 'early'} stage idea.`, 
-        lessons: 4, 
+      {
+        title: 'Scaling Operations',
+        description: `Build a solid growth plan for your ${stage || 'early'} stage idea.`,
+        lessons: 4,
         duration: 20,
         level: stage === 'growth' ? 'Advanced' : 'Beginner'
       }

@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { Op } = require("sequelize"); 
+const { Op } = require("sequelize");
 const { OAuth2Client } = require('google-auth-library'); // NEW: Import Google Auth Library
 const User = require("../models/user.model");
 const AppError = require("../utils/AppError");
@@ -66,7 +66,7 @@ const login = async (req, res, next) => {
     const searchCondition = email ? { email } : { phone_number: phoneNumber };
 
     const user = await User.findOne({ where: searchCondition });
-    
+
     if (!user) {
       return next(new AppError("Invalid credentials", 401));
     }
@@ -115,7 +115,7 @@ const googleLogin = async (req, res, next) => {
     // 1. Verify the token with Google to make sure it's real
     const ticket = await googleClient.verifyIdToken({
       idToken: credential,
-      audience: process.env.GOOGLE_CLIENT_ID,  
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
     const { email, name } = payload;

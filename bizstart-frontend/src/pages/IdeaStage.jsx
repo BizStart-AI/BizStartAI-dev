@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaChevronLeft } from 'react-icons/fa';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import api from '../api';
+import ENDPOINTS from '../api/endpoints';
 // ADDED: Import toast and Toaster
 import toast, { Toaster } from 'react-hot-toast';
 import PageWrapper from '../components/PageWrapper';
@@ -9,7 +10,10 @@ import PrimaryButton from '../components/PrimaryButton';
 
 const YourIdeaScreen = () => {
   const navigate = useNavigate();
-  const [ideaData, setIdeaData] = useState({ businessIdea: '', problemSolved: '' });
+  const [ideaData, setIdeaData] = useState({ 
+    business_name: '', // Aligned with backend
+    description: ''   // Aligned with backend
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -20,29 +24,32 @@ const YourIdeaScreen = () => {
 
   const getAISuggestedIndustry = async (idea, problem) => {
     try {
-      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-      const prompt = `A user has a business idea: "${idea}". The problem it solves is: "${problem}". Based on this, choose the best industry ID from this list: - beauty, - retail, - small-scale, - service, - fashion. Return ONLY the word of the ID. No sentences. No punctuation.`;
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      return response.text().trim().toLowerCase();
+      const prompt = `A user has a business idea: "${idea}". The problem it solves is: "${problem}".`;
+      const res = await api.post(ENDPOINTS.SUGGEST_INDUSTRY, { text: prompt });
+      return res.data?.industry || "retail";
     } catch (error) {
-      console.error("Gemini Error:", error);
+      console.error("AI Suggestion Error:", error);
       return "retail";
     }
   };
 
   const handleContinue = async () => {
-    if (!ideaData.businessIdea || !ideaData.problemSolved) {
+    if (!ideaData.business_name || !ideaData.description) {
       // REPLACED: alert with error toast
       toast.error("Please fill in both fields so I can help you!");
       return;
     }
 
     setIsLoading(true);
-    const suggestedIndustry = await getAISuggestedIndustry(ideaData.businessIdea, ideaData.problemSolved);
+    const suggestedIndustry = await getAISuggestedIndustry(ideaData.business_name, ideaData.description);
     const existingData = JSON.parse(localStorage.getItem('userAccount') || '{}');
-    const updatedData = { ...existingData, ...ideaData, suggestedIndustry };
+    // Store with standardized keys and business_stage
+    const updatedData = { 
+      ...existingData, 
+      ...ideaData, 
+      industry: suggestedIndustry,
+      business_stage: 'idea' 
+    };
     localStorage.setItem('userAccount', JSON.stringify(updatedData));
     setIsLoading(false);
 
@@ -102,21 +109,21 @@ const YourIdeaScreen = () => {
                 What's your business idea?
               </label>
               <textarea
-                name="businessIdea"
-                value={ideaData.businessIdea}
+                name="business_name"
+                value={ideaData.business_name}
                 onChange={handleChange}
                 placeholder="Example: Selling natural black soap and glow oils for babies..."
                 className="w-full p-4 h-24 rounded-2xl border border-gray-400 bg-white outline-none focus:border-primary transition-colors text-base placeholder:text-sm resize-none overflow-hidden font-sans font-normal leading-[140%]"
               />
             </div>
-
+ 
             <div className="flex flex-col gap-3">
               <label className="text-slate-900 font-sans font-medium text-[16px] leading-[140%]">
                 What problem does it solve?
               </label>
               <textarea
-                name="problemSolved"
-                value={ideaData.problemSolved}
+                name="description"
+                value={ideaData.description}
                 onChange={handleChange}
                 placeholder="Example: Mothers want organic cream that works without harsh chemicals..."
                 className="w-full p-4 h-24 rounded-2xl border border-gray-400 bg-white outline-none focus:border-primary transition-colors text-base placeholder:text-sm resize-none overflow-hidden font-sans font-normal leading-[140%]"

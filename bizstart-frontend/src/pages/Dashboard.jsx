@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Bell, Home, Briefcase, MessageSquare, User } from "lucide-react";
 import Logo from "../assets/bizstart-ai.png";
-import { useNavigate } from "react-router-dom"; // Added for navigation
+import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { ENDPOINTS } from "../api/endpoints";
 import BottomNav from "../components/BottomNav";
 import { FaBookOpen, FaRegClock, FaStar } from "react-icons/fa6";
 import { RiRobot2Line } from "react-icons/ri";
@@ -13,27 +14,13 @@ const Dashboard = () => {
   const [userName] = useState(() => {
     try {
       const saved = localStorage.getItem('userAccount');
-      return saved ? (JSON.parse(saved).name || "Business Owner") : "Guest";
+      return saved ? (JSON.parse(saved).name || "Business Owner") : "Business Owner";
     } catch {
-      return "Guest";
+      return "Business Owner";
     }
   });
-  const [recommendedCourses, setRecommendedCourses] = useState(() => {
-    try {
-      const cache = localStorage.getItem('ai_lessons_cache');
-      return cache ? JSON.parse(cache) : [];
-    } catch {
-      return [];
-    }
-  });
-  const [isAiLoading, setIsAiLoading] = useState(() => {
-    try {
-      const cache = localStorage.getItem('ai_lessons_cache');
-      return !cache; // If there's no cache, we are loading
-    } catch {
-      return true;
-    }
-  });
+  const [recommendedCourses, setRecommendedCourses] = useState([]);
+  const [isAiLoading, setIsAiLoading] = useState(true);
 
 
   useEffect(() => {
@@ -41,35 +28,28 @@ const Dashboard = () => {
 
     async function fetchRecommendations(userData) {
       try {
-        const res = await api.post('/recommendations', {
-          businessName: userData.businessName,
-          industry: userData.suggestedIndustry,
-          stage: userData.stage
+        const res = await api.post(ENDPOINTS.RECOMMENDATIONS, {
+          businessName: userData.business_name || userData.businessName,
+          industry: userData.industry || userData.suggestedIndustry,
+          stage: userData.business_stage || userData.stage
         });
 
         if (!mounted) return;
 
         const aiData = res.data?.data || res.data || [];
+        const stage = userData.business_stage || userData.stage; // Extracted stage
         const formattedData = aiData.map(item => ({
           ...item,
-          level: userData.stage === 'growth' ? 'Advanced' : 'Beginner'
+          level: stage === 'growth' ? 'Advanced' : 'Beginner' // Used extracted stage
         }));
 
-        localStorage.setItem('ai_lessons_cache', JSON.stringify(formattedData));
         setRecommendedCourses(formattedData);
         setIsAiLoading(false);
       } catch (error) {
         console.error("AI Fetch Error:", error);
         if (!mounted) return;
 
-        const fallback = [
-          { title: "Market Entry", description: "Learn how to find customers.", lessons: 5, duration: 25, level: "Beginner" },
-          { title: "Business Strategy", description: "Build a plan for growth.", lessons: 4, duration: 20, level: "Beginner" }
-        ];
-
-        localStorage.setItem('ai_lessons_cache', JSON.stringify(fallback));
-        setRecommendedCourses(fallback);
-        setIsAiLoading(false);
+        setIsAiLoading(false); // Set loading to false on error
       }
     }
 

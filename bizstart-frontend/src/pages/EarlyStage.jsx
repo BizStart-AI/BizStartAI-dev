@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaChevronLeft } from 'react-icons/fa';
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import api from '../api';
+import ENDPOINTS from '../api/endpoints';
 import toast, { Toaster } from 'react-hot-toast';
 import PageWrapper from '../components/PageWrapper';
 import PrimaryButton from '../components/PrimaryButton';
@@ -11,11 +12,11 @@ const EarlyStageScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [earlyData, setEarlyData] = useState({
-    businessName: '',
-    targetAudience: '',
-    monthlyRevenue: '',
-    teamSize: '',
-    primaryGoals: []
+    business_name: '',
+    description: '',
+    monthly_revenue: '',
+    team_size: '',
+    primary_goals: []
   });
 
   const goalOptions = [
@@ -33,40 +34,29 @@ const EarlyStageScreen = () => {
 
   const toggleGoal = (goal) => {
     setEarlyData(prev => {
-      const isSelected = prev.primaryGoals.includes(goal);
+      const isSelected = prev.primary_goals.includes(goal);
       return {
         ...prev,
-        primaryGoals: isSelected
-          ? prev.primaryGoals.filter(g => g !== goal)
-          : [...prev.primaryGoals, goal]
+        primary_goals: isSelected
+          ? prev.primary_goals.filter(g => g !== goal)
+          : [...prev.primary_goals, goal]
       };
     });
   };
 
   const getAISuggestedIndustry = async (name, audience) => {
     try {
-      const genAI = new GoogleGenerativeAI("AIzaSyDPDeIWbR2CqoF9Mcw9itZolPwJFiqVfmQ");
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-      const prompt = `
-        Business Name: "${name}"
-        Target Audience: "${audience}"
-        Based on these details, choose the best industry ID from this list:
-        - beauty, - retail, - small-scale, - service, - fashion
-        Return ONLY the word of the ID. No sentences. No punctuation.
-      `;
-
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      return response.text().trim().toLowerCase();
+      const prompt = `Business Name: "${name}". Target Audience: "${audience}".`;
+      const res = await api.post(ENDPOINTS.SUGGEST_INDUSTRY, { text: prompt });
+      return res.data?.industry || "retail";
     } catch (error) {
-      console.error("Gemini Error:", error);
+      console.error("AI Suggestion Error:", error);
       return "retail";
     }
   };
 
   const handleContinue = async () => {
-    if (!earlyData.businessName || !earlyData.targetAudience) {
+    if (!earlyData.business_name || !earlyData.description) {
       toast.error("Please fill in your business name and audience!");
       return;
     }
@@ -74,8 +64,8 @@ const EarlyStageScreen = () => {
     setIsLoading(true);
 
     const suggestedIndustry = await getAISuggestedIndustry(
-      earlyData.businessName,
-      earlyData.targetAudience
+      earlyData.business_name,
+      earlyData.description
     );
 
     const existingData = JSON.parse(localStorage.getItem('userAccount') || '{}');
@@ -83,7 +73,8 @@ const EarlyStageScreen = () => {
     localStorage.setItem('userAccount', JSON.stringify({
       ...existingData,
       ...earlyData,
-      suggestedIndustry: suggestedIndustry
+      industry: suggestedIndustry,
+      business_stage: 'early'
     }));
 
     setIsLoading(false);
@@ -144,7 +135,8 @@ const EarlyStageScreen = () => {
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold text-slate-900 font-sans">Business Name</label>
             <input
-              name="businessName"
+              name="business_name"
+              value={earlyData.business_name}
               onChange={handleInputChange}
               placeholder="Example: Mama T's Glow Shop"
               className="w-full p-3.5 rounded-xl border border-gray-200 outline-none focus:border-primary transition-colors placeholder:text-sm placeholder:text-gray-300 text-base font-sans"
@@ -154,7 +146,8 @@ const EarlyStageScreen = () => {
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold text-slate-900 font-sans">Target Audience</label>
             <textarea
-              name="targetAudience"
+              name="description"
+              value={earlyData.description}
               onChange={handleInputChange}
               placeholder="Who are you selling to?"
               className="w-full p-3.5 h-20 rounded-xl border border-gray-200 outline-none focus:border-primary transition-colors placeholder:text-sm placeholder:text-gray-300 resize-none text-base font-sans"
@@ -164,7 +157,8 @@ const EarlyStageScreen = () => {
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold text-slate-900 font-sans">Monthly Revenue (Naira)</label>
             <input
-              name="monthlyRevenue"
+              name="monthly_revenue"
+              value={earlyData.monthly_revenue}
               onChange={handleInputChange}
               placeholder="Example: 200,000"
               className="w-full p-3.5 rounded-xl border border-gray-200 outline-none focus:border-primary transition-colors placeholder:text-sm placeholder:text-gray-300 text-base font-sans"
@@ -174,7 +168,8 @@ const EarlyStageScreen = () => {
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold text-slate-900 font-sans">Team Size</label>
             <input
-              name="teamSize"
+              name="team_size"
+              value={earlyData.team_size}
               onChange={handleInputChange}
               placeholder="Example: 3 people"
               className="w-full p-3.5 rounded-xl border border-gray-200 outline-none focus:border-primary transition-colors placeholder:text-sm placeholder:text-gray-300 text-base font-sans"
@@ -188,12 +183,12 @@ const EarlyStageScreen = () => {
                 <label key={index} className="flex items-center gap-3 cursor-pointer group">
                   <div
                     onClick={() => toggleGoal(goal)}
-                    className={`w-4 h-4 rounded border transition-all flex items-center justify-center ${earlyData.primaryGoals.includes(goal)
+                    className={`w-4 h-4 rounded border transition-all flex items-center justify-center ${earlyData.primary_goals.includes(goal)
                         ? 'bg-primary border-primary'
                         : 'border-gray-300'
                       }`}
                   >
-                    {earlyData.primaryGoals.includes(goal) && (
+                    {earlyData.primary_goals.includes(goal) && (
                       <div className="w-1.5 h-1.5 bg-white rounded-sm" />
                     )}
                   </div>

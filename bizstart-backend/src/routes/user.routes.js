@@ -18,28 +18,28 @@ router.get("/me", authenticate, async (req, res, next) => {
 router.post("/business-profile", authenticate, async (req, res, next) => {
   try {
     const business_stage = req.body.business_stage || req.body.businessStage;
-    const business_name = req.body.business_name || req.body.businessIdea; 
+    const business_name = req.body.business_name || req.body.businessIdea;
     const description = req.body.description || req.body.problemSolved;
     const industry = req.body.industry;
-    
+
     const userId = req.user.id;
 
     let profile = await BusinessProfile.findOne({ where: { user_id: userId } });
-    
+
     if (profile) {
-      profile = await profile.update({ 
-        business_stage: business_stage, 
-        business_name: business_name, 
-        description: description, 
-        industry: industry 
+      profile = await profile.update({
+        business_stage: business_stage,
+        business_name: business_name,
+        description: description,
+        industry: industry
       });
     } else {
-      profile = await BusinessProfile.create({ 
-        user_id: userId, 
-        business_stage: business_stage, 
-        business_name: business_name, 
-        description: description, 
-        industry: industry 
+      profile = await BusinessProfile.create({
+        user_id: userId,
+        business_stage: business_stage,
+        business_name: business_name,
+        description: description,
+        industry: industry
       });
     }
 
@@ -56,7 +56,7 @@ router.get("/dashboard", authenticate, async (req, res, next) => {
 
     const user = await User.findByPk(userId, { attributes: ['id', 'name', 'email'] });
     const businessProfile = await BusinessProfile.findOne({ where: { user_id: userId } });
-    
+
     let recentConversations = [];
     try {
       recentConversations = await Conversation.findAll({

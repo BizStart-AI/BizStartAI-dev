@@ -3,11 +3,11 @@ const User = require("../models/user.model");
 const getDashboardData = async (req, res, next) => {
   try {
     // The 'authenticate' middleware adds req.user automatically!
-    const userId = req.user.id; 
+    const userId = req.user.id;
 
     // Find the user in TiDB
-    const user = await User.findByPk(userId, { 
-      attributes: ['id', 'name', 'email', 'phone_number'] 
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'name', 'email', 'phone_number']
     });
 
     if (!user) {

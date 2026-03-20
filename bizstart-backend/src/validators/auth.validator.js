@@ -9,8 +9,12 @@ const registerSchema = Joi.object({
   name: Joi.string().min(2).max(50).required().messages({
     "string.empty": "Name is required.",
   }),
-  phoneNumber: Joi.string().min(10).max(15).required().messages({
-    "string.empty": "Phone number is required.",
+  email: Joi.string().email().lowercase().required().messages({
+    "string.email": "Invalid email address.",
+    "string.empty": "Email is required.",
+  }),
+  phoneNumber: Joi.string().min(10).max(15).messages({
+    "string.empty": "Phone number is optional.",
   }),
   password: Joi.string().pattern(passwordRegex).required().messages({
     "string.pattern.base": passwordErrorMessage,
@@ -19,8 +23,9 @@ const registerSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-  phoneNumber: Joi.string().required().messages({
-    "string.empty": "Phone number is required to login.",
+  email: Joi.string().email().lowercase().required().messages({
+    "string.email": "Invalid email address.",
+    "string.empty": "Email is required to login.",
   }),
   password: Joi.string().required().messages({
     "string.empty": "Password is required to login.",

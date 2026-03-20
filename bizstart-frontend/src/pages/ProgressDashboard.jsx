@@ -4,42 +4,9 @@ import Logo from "../assets/bizstart-ai.png";
 import BottomNav from "../components/BottomNav";
 import { FaRegFileLines, FaBookOpen, FaRegClock } from "react-icons/fa6";
 import { RiRobot2Line } from "react-icons/ri";
-
-// Mock data
-const userProgress = {
-  name: "Sandra",
-  completedModules: 3,
-  totalModules: 8,
-  progressPercent: 37,
-  summary: [
-    { value: "45%", icon: <FaRegFileLines />, label: "Business Plan" },
-    { value: 12, icon: <FaBookOpen />, label: "Lessons Done" },
-    { value: 5, icon: <RiRobot2Line />, label: "AI Sessions" },
-  ],
-  courses: [
-    {
-      title: "Understanding Your Market",
-      description: "Learn to analyze your audience and competitors",
-      completedLessons: 3,
-      totalLessons: 6,
-      duration: 35,
-    },
-    {
-      title: "Business Strategy Basics",
-      description: "Plan and execute your strategy effectively",
-      completedLessons: 1,
-      totalLessons: 4,
-      duration: 25,
-    },
-    {
-      title: "Marketing Essentials",
-      description: "Learn the fundamentals of marketing",
-      completedLessons: 2,
-      totalLessons: 5,
-      duration: 40,
-    },
-  ],
-};
+import api from "../api";
+import { ENDPOINTS } from "../api/endpoints";
+import { useEffect, useState } from "react";
 
 // Components
 const Header = () => (
@@ -102,6 +69,38 @@ const InProgressCourseCard = ({ title, description, completedLessons, totalLesso
 };
 
 const ProgressDashboard = () => {
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const res = await api.get(ENDPOINTS.PROGRESS_DASHBOARD);
+        setData(res.data?.data || res.data);
+      } catch (err) {
+        console.error("Failed to fetch progress:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProgress();
+  }, []);
+
+  if (loading) return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+
+  const displayData = data || {
+    name: "User",
+    completedModules: 0,
+    totalModules: 0,
+    progressPercent: 0,
+    summary: [],
+    courses: []
+  };
+
   return (
     <div className="w-full min-h-screen bg-white flex flex-col">
       {/* Header sticky */}
@@ -112,7 +111,7 @@ const ProgressDashboard = () => {
         {/* Welcome text on top */}
         <div>
           <p className="font-semibold text-gray-800 text-lg">
-            Welcome back {userProgress.name}!
+            Welcome back {displayData.name}!
           </p>
           <p className="text-gray-500 text-sm mt-1">
             You are making great progress on your journey!
@@ -121,15 +120,19 @@ const ProgressDashboard = () => {
 
         {/* Learning Progress Card */}
         <ProgressCard
-          completedModules={userProgress.completedModules}
-          totalModules={userProgress.totalModules}
-          progressPercent={userProgress.progressPercent}
+          completedModules={displayData.completedModules}
+          totalModules={displayData.totalModules}
+          progressPercent={displayData.progressPercent}
         />
 
         {/* Summary KPI Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {userProgress.summary.map((item, idx) => (
-            <SummaryCard key={idx} {...item} />
+          {(displayData.summary || []).map((item, idx) => (
+            <SummaryCard key={idx} {...item} icon={
+              item.label === "Business Plan" ? <FaRegFileLines /> :
+              item.label === "Lessons Done" ? <FaBookOpen /> :
+              <RiRobot2Line />
+            } />
           ))}
         </div>
 
@@ -137,7 +140,7 @@ const ProgressDashboard = () => {
         <div>
           <h2 className="font-semibold text-gray-800 mb-3">Continue Learning</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {userProgress.courses.map((course, idx) => (
+            {(displayData.courses || []).map((course, idx) => (
               <InProgressCourseCard key={idx} {...course} />
             ))}
           </div>

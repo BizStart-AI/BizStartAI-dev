@@ -15,7 +15,7 @@ const User = sequelize.define("User", {
 
   email: {
     type: DataTypes.STRING,
-    allowNull: true, // Changed: Optional because manual signups use phone numbers
+    allowNull: false, // Required for manual and Google signups
     unique: true,
     validate: {
       isEmail: true,
@@ -24,7 +24,7 @@ const User = sequelize.define("User", {
 
   phone_number: {
     type: DataTypes.STRING,
-    allowNull: true, // Added: Optional because Google signups only give emails
+    allowNull: true, // Optional
     unique: true,
   },
 

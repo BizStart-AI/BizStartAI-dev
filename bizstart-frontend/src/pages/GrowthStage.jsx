@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaChevronLeft } from 'react-icons/fa';
-// 1. Import the library
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import api from '../api';
+import ENDPOINTS from '../api/endpoints';
 // ADDED: Import toast and the Toaster container
 import toast, { Toaster } from 'react-hot-toast';
 import PageWrapper from '../components/PageWrapper';
@@ -16,9 +16,9 @@ const GrowthStageScreen = () => {
 
   // State for form inputs
   const [growthData, setGrowthData] = useState({
-    businessName: '',
+    business_name: '',
     description: '',
-    operatingTime: '',
+    operating_time: '',
     challenges: []
   });
 
@@ -50,32 +50,18 @@ const GrowthStageScreen = () => {
   // 2. NEW: Function to pick the Industry ID based on growth details
   const getAISuggestedIndustry = async (name, description) => {
     try {
-      // Direct key implementation
-      const genAI = new GoogleGenerativeAI("AIzaSyDPDeIWbR2CqoF9Mcw9itZolPwJFiqVfmQ");
-      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-
-      const prompt = `
-        Business Name: "${name}"
-        Description: "${description}"
-
-        Based on these details, pick the best industry ID from this list:
-        - beauty, - retail, - small-scale, - service, - fashion
-        
-        Return ONLY the word of the ID. No sentences. No punctuation.
-      `;
-
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      return response.text().trim().toLowerCase();
+      const prompt = `Business Name: "${name}". Description: "${description}".`;
+      const res = await api.post(ENDPOINTS.SUGGEST_INDUSTRY, { text: prompt });
+      return res.data?.industry || "retail";
     } catch (error) {
-      console.error("Gemini Error:", error);
+      console.error("AI Suggestion Error:", error);
       return "retail"; // Fallback
     }
   };
 
   const handleContinue = async () => {
     // REPLACED: alert with toast.error
-    if (!growthData.businessName || !growthData.description) {
+    if (!growthData.business_name || !growthData.description) {
       toast.error("Please provide your business name and description!");
       return;
     }
@@ -83,7 +69,7 @@ const GrowthStageScreen = () => {
     setIsLoading(true);
 
     const suggestedIndustry = await getAISuggestedIndustry(
-      growthData.businessName,
+      growthData.business_name,
       growthData.description
     );
 
@@ -92,7 +78,8 @@ const GrowthStageScreen = () => {
     localStorage.setItem('userAccount', JSON.stringify({
       ...existingData,
       ...growthData,
-      suggestedIndustry: suggestedIndustry
+      industry: suggestedIndustry,
+      business_stage: 'growth'
     }));
 
     setIsLoading(false);
@@ -153,7 +140,8 @@ const GrowthStageScreen = () => {
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold text-slate-900 font-sans">Business Name</label>
             <input
-              name="businessName"
+              name="business_name"
+              value={growthData.business_name}
               onChange={handleInputChange}
               placeholder="Your registered business name"
               className="w-full p-3.5 rounded-xl border border-gray-200 outline-none focus:border-primary transition-colors placeholder:text-sm placeholder:text-gray-300 text-base font-sans"
@@ -164,6 +152,7 @@ const GrowthStageScreen = () => {
             <label className="text-sm font-semibold text-slate-900 font-sans">Business Description</label>
             <input
               name="description"
+              value={growthData.description}
               onChange={handleInputChange}
               placeholder="Quick elevator pitch"
               className="w-full p-3.5 rounded-xl border border-gray-200 outline-none focus:border-primary transition-colors placeholder:text-sm placeholder:text-gray-300 text-base font-sans"
@@ -173,7 +162,8 @@ const GrowthStageScreen = () => {
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-semibold text-slate-900 font-sans">Operating Time</label>
             <input
-              name="operatingTime"
+              name="operating_time"
+              value={growthData.operating_time}
               onChange={handleInputChange}
               placeholder="Example: 2 years"
               className="w-full p-3.5 rounded-xl border border-gray-200 outline-none focus:border-primary transition-colors placeholder:text-sm placeholder:text-gray-300 text-base font-sans"
