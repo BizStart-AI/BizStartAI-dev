@@ -2,6 +2,7 @@ import React from "react";
 import { Bell } from "lucide-react";
 import Logo from "../assets/bizstart-ai.png";
 import BottomNav from "../components/BottomNav";
+import api from "../api";
 
 // Mock data
 const userProgress = {
