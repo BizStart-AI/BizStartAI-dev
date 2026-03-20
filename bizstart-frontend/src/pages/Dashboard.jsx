@@ -4,6 +4,9 @@ import Logo from "../assets/bizstart-ai.png";
 import { useNavigate } from "react-router-dom"; // Added for navigation
 import api from "../api";
 import BottomNav from "../components/BottomNav";
+import { FaBookOpen, FaRegClock, FaStar } from "react-icons/fa6";
+import { RiRobot2Line } from "react-icons/ri";
+import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -31,7 +34,7 @@ const Dashboard = () => {
       return true;
     }
   });
-  const PRIMARY = "#6E62B1"; // ADD THIS LINE HERE
+
 
   useEffect(() => {
     let mounted = true;
@@ -85,8 +88,8 @@ const Dashboard = () => {
   }, []);
 
   const exploreOptions = [
-    { icon: "🤖", title: "Refine Your Idea", description: "Chat with AI to strengthen your business concept" },
-    { icon: "📋", title: "Create Your Plan", description: "Generate your first business plan with AI assistance" }
+    { icon: <RiRobot2Line className="text-primary mx-auto" />, title: "Refine Your Idea", description: "Chat with AI to strengthen your business concept" },
+    { icon: <HiOutlineClipboardDocumentList className="text-primary mx-auto" />, title: "Create Your Plan", description: "Generate your first business plan with AI assistance" }
   ];
 
   return (
@@ -94,7 +97,7 @@ const Dashboard = () => {
       <div className="w-full max-w-300 flex flex-col gap-6">
         <div className="flex items-center justify-between">
           <img src={Logo} alt="BizStart AI" className="h-10 object-contain" />
-          <Bell stroke="black" size={22} className="cursor-pointer" />
+          <Bell className="text-dark cursor-pointer" size={22} />
         </div>
 
         <div className="bg-primary text-white rounded-2xl p-4">
@@ -120,10 +123,10 @@ const Dashboard = () => {
                     <p className="text-sm text-gray-500 mt-1 line-clamp-1 overflow-hidden text-ellipsis whitespace-nowrap">
                       {course.description}
                     </p>
-                    <div className="flex gap-4 text-xs text-gray-500 mt-3 flex-wrap">
-                      <span>📖 {course.lessons} Lessons</span>
-                      <span>⏱ {course.duration} Minutes</span>
-                      <span>⭐ {course.level}</span>
+                    <div className="flex gap-4 text-xs text-gray-500 mt-3 flex-wrap items-center">
+                      <span className="flex items-center gap-1.5"><FaBookOpen className="text-primary" /> {course.lessons} Lessons</span>
+                      <span className="flex items-center gap-1.5"><FaRegClock className="text-primary" /> {course.duration} Minutes</span>
+                      <span className="flex items-center gap-1.5"><FaStar className="text-yellow-500" /> {course.level}</span>
                     </div>
                   </div>
                   <button

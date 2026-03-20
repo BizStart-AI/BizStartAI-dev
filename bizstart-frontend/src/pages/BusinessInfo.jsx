@@ -4,8 +4,6 @@ import { useNavigate } from "react-router-dom";
 import PageWrapper from "../components/PageWrapper";
 import BottomNav from "../components/BottomNav";
 
-const PRIMARY = "#6E62B1";
-
 export default function BusinessInfo() {
   const navigate = useNavigate();
 
@@ -31,8 +29,7 @@ export default function BusinessInfo() {
         {["Business", "Market", "Strategy", "Financials"].map((label, i) => (
           <div key={i} className="flex flex-col items-center flex-1">
             <div
-              className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm"
-              style={{ background: i === 0 ? PRIMARY : "#E5E5E5" }}
+              className={`w-10 h-10 rounded-full flex items-center justify-center text-white text-sm ${i === 0 ? "bg-primary" : "bg-gray-200"}`}
             >
               {i + 1}
             </div>
@@ -64,8 +61,7 @@ export default function BusinessInfo() {
       {/* Next Button */}
       <button
         onClick={() => navigate("/market-info")}
-        className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md cursor-pointer"
-        style={{ background: PRIMARY }}
+        className="w-full mt-8 py-4 rounded-xl text-white font-semibold shadow-md cursor-pointer bg-primary"
       >
         Next
       </button>

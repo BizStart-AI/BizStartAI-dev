@@ -20,7 +20,7 @@ const YourIdeaScreen = () => {
 
   const getAISuggestedIndustry = async (idea, problem) => {
     try {
-      const genAI = new GoogleGenerativeAI("AIzaSyCvDPGH154PJk1pakpHV_PVgq9erhld2Is");
+      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
       const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
       const prompt = `A user has a business idea: "${idea}". The problem it solves is: "${problem}". Based on this, choose the best industry ID from this list: - beauty, - retail, - small-scale, - service, - fashion. Return ONLY the word of the ID. No sentences. No punctuation.`;
       const result = await model.generateContent(prompt);
@@ -88,7 +88,7 @@ const YourIdeaScreen = () => {
             </h1>
           </div>
 
-          <p className="text-[#666666] font-sans font-light text-[14px] leading-[140%] text-center mb-0 mx-auto">
+          <p className="text-gray-500 font-sans font-light text-[14px] leading-[140%] text-center mb-0 mx-auto">
             Share your business idea with me! <br />
             Don't worry about making it perfect <br />
             I will help you refine it.

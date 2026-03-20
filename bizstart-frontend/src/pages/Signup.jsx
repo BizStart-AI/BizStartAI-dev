@@ -4,6 +4,8 @@ import { FaApple, FaLock, FaEyeSlash, FaEye, FaChevronLeft } from 'react-icons/f
 import { useGoogleLogin } from '@react-oauth/google';
 import toast, { Toaster } from 'react-hot-toast';
 import api from '../api';
+import ENDPOINTS from '../api/endpoints';
+import handleError from '../utils/errorHandler';
 import PageWrapper from '../components/PageWrapper';
 import PrimaryButton from '../components/PrimaryButton';
 
@@ -21,19 +23,18 @@ const SignupScreen = () => {
   const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
-        // Send the Google token to your backend
-        const res = await api.post('/auth/google', {
-          access_token: tokenResponse.access_token
+        const res = await api.post(ENDPOINTS.GOOGLE_AUTH, {
+          credential: tokenResponse.id_token
         });
 
         if (res.data.success) {
           localStorage.setItem('token', res.data.token);
           localStorage.setItem('userAccount', JSON.stringify(res.data.user));
-          toast.success('Successfully logged in with Google!');
+          toast.success('Welcome! Successfully logged in with Google.');
           setTimeout(() => navigate('/BusinessJourney'), 1000);
         }
       } catch (error) {
-        toast.error('Google login failed. Please try again.');
+        handleError(error, 'Google login failed. Please try again.');
       }
     },
     onError: () => toast.error('Google Login Failed. Please try again.'),
@@ -54,10 +55,10 @@ const SignupScreen = () => {
     }
 
     try {
-      await api.post('/auth/register', formData);
+      await api.post(ENDPOINTS.REGISTER, formData);
 
       // Auto-login
-      const loginRes = await api.post('/auth/login', {
+      const loginRes = await api.post(ENDPOINTS.LOGIN, {
         email: formData.email,
         password: formData.password
       });
@@ -65,12 +66,11 @@ const SignupScreen = () => {
       if (loginRes.data.success) {
         localStorage.setItem('token', loginRes.data.token);
         localStorage.setItem('userAccount', JSON.stringify(loginRes.data.user)); // use data from login
-        toast.success('Account created successfully!');
+        toast.success('Account created! Welcome to BizStartAI.');
         setTimeout(() => navigate('/BusinessJourney'), 1000);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Failed to create account. Please try again.';
-      toast.error(errorMsg);
+      handleError(err);
     }
   };
 

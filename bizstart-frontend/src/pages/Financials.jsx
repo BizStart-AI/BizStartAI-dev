@@ -1,16 +1,25 @@
 import React from "react";
 import { ArrowLeft, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const PRIMARY = "#6E62B1";
+import { GoHome } from "react-icons/go";
+import { FaBriefcase, FaUser } from "react-icons/fa6";
+import { RiRobot2Line } from "react-icons/ri";
 
 // Updated BottomNav to stay slim and centered on desktop
 const BottomNav = () => (
   <div className="fixed bottom-0 left-0 w-full md:bottom-6 md:left-1/2 md:-translate-x-1/2 md:w-max md:rounded-2xl md:shadow-lg border-t md:border bg-white flex justify-around gap-10 px-8 py-3 text-xs z-50">
-    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">🏠 Home</div>
-    <div className="flex flex-col items-center text-[#6E62B1] font-medium cursor-pointer">🧰 Tools</div>
-    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">🤖 AI Mentor</div>
-    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">👤 Profile</div>
+    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">
+      <GoHome size={22} className="mb-0.5" /> Home
+    </div>
+    <div className="flex flex-col items-center text-primary font-medium cursor-pointer">
+      <FaBriefcase size={20} className="mb-0.5" /> Tools
+    </div>
+    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">
+      <RiRobot2Line size={22} className="mb-0.5" /> AI Mentor
+    </div>
+    <div className="flex flex-col items-center text-gray-400 cursor-pointer hover:text-gray-600">
+      <FaUser size={20} className="mb-0.5" /> Profile
+    </div>
   </div>
 );
 
@@ -22,7 +31,7 @@ export default function Financials() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
       {/* Header - Stretches full width */}
-      <div className="sticky top-0 bg-white px-6 py-5 border-b flex items-center justify-center relative z-10">
+      <div className="sticky top-0 bg-white px-6 py-5 border-b flex items-center justify-center z-10">
         <button 
           onClick={() => navigate(-1)} 
           className="absolute left-6 md:left-10 p-2 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all"
@@ -43,8 +52,7 @@ export default function Financials() {
           {steps.map((label, i) => (
             <div key={i} className="flex flex-col items-center flex-1">
               <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md transition-transform hover:scale-110"
-                style={{ backgroundColor: i < 3 ? "#22C55E" : PRIMARY }}
+                className={`w-10 h-10 rounded-full flex items-center justify-center text-white shadow-md transition-transform hover:scale-110 ${i < 3 ? "bg-green-500" : "bg-primary"}`}
               >
                 {i < 3 ? <Check size={18} /> : 4}
               </div>
@@ -72,7 +80,7 @@ export default function Financials() {
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">₦</span>
               <input 
                 type="number"
-                className="w-full pl-10 p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#6E62B1] outline-none transition-all" 
+                className="w-full pl-10 p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
                 placeholder="0.00"
               />
             </div>
@@ -85,7 +93,7 @@ export default function Financials() {
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium">₦</span>
               <input 
                 type="number"
-                className="w-full pl-10 p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#6E62B1] outline-none transition-all" 
+                className="w-full pl-10 p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
                 placeholder="0.00"
               />
             </div>
@@ -94,7 +102,7 @@ export default function Financials() {
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Revenue Model</label>
             <input 
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-[#6E62B1] outline-none transition-all" 
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl focus:bg-white focus:ring-2 focus:ring-primary outline-none transition-all" 
               placeholder="e.g., Monthly Subscriptions, Unit Sales"
             />
           </div>
@@ -105,8 +113,7 @@ export default function Financials() {
         <div className="mt-12 flex justify-center">
           <button
             onClick={() => navigate("/generating")}
-            className="w-full md:w-80 py-4 rounded-2xl text-white font-bold text-lg shadow-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer"
-            style={{ backgroundColor: PRIMARY }}
+            className="w-full md:w-80 py-4 rounded-2xl text-white font-bold text-lg shadow-xl hover:opacity-90 active:scale-95 transition-all cursor-pointer bg-primary"
           >
             Generate Plan
           </button>

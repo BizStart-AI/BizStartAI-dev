@@ -29,7 +29,7 @@ const SuccessScreen = () => {
         </h1>
 
         {/* Success Subtext */}
-        <p className="text-[#666666] font-sans font-extralight text-[13px] leading-[140%] text-center max-w-[300px] mt-2 mb-[60px]">
+        <p className="text-gray-500 font-sans font-extralight text-[13px] leading-[140%] text-center max-w-[300px] mt-2 mb-[60px]">
           Welcome to BizStart AI, your business paddy! <br />
           Your personalized dashboard is ready <br />
           and we've created a custom learning path just for you.

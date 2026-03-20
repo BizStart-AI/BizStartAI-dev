@@ -75,7 +75,7 @@ const SelectIndustryScreen = () => {
             </h1>
           </div>
 
-          <p className="text-[#666666] font-sans font-light text-[13px] text-center mb-0">
+          <p className="text-gray-500 font-sans font-light text-[13px] text-center mb-0">
             Based on your idea, I’ve picked the best category for you
           </p>
         </div>

@@ -7,11 +7,9 @@ const ChatMessage = ({ text, sender }) => {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
       <div
-        className="max-w-[80%] p-3 rounded-2xl text-sm"
-        style={{
-          backgroundColor: isUser ? PRIMARY : "#F3F2FA",
-          color: isUser ? "white" : "#1A1426",
-        }}
+        className={`max-w-[80%] p-3 rounded-2xl text-sm ${
+          isUser ? "bg-primary text-white" : "bg-primary-light text-dark"
+        }`}
       >
         {/* Replace {text} with the Markdown component */}
         <div className="markdown-container">

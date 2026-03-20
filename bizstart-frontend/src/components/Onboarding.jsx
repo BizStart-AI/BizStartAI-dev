@@ -32,7 +32,7 @@ const OnboardingScreen = () => {
           <div className="mt-8 flex flex-col gap-3">
             <button
               onClick={() => navigate("/signup")}
-              className="bg-[#6E62B1] text-white py-3.5 rounded-xl"
+              className="bg-primary text-white py-3.5 rounded-xl"
             >
               Create Account
             </button>
@@ -64,7 +64,7 @@ const OnboardingScreen = () => {
           <div className="mt-10 flex gap-4">
             <button
               onClick={() => navigate("/signup")}
-              className="bg-[#6E62B1] text-white px-8 py-4 rounded-xl shadow-md"
+              className="bg-primary text-white px-8 py-4 rounded-xl shadow-md"
             >
               Create Account
             </button>

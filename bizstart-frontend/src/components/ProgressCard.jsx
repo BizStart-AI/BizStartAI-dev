@@ -7,8 +7,8 @@ const ProgressCard = ({ completedModules, totalModules, progressPercent }) => {
       {/* Progress Bar */}
       <div className="w-full bg-gray-200 rounded-full h-3">
         <div
-          style={{ width: `${progressPercent}%`, backgroundColor: "#6E62B1" }}
-          className="h-3 rounded-full"
+          style={{ width: `${progressPercent}%` }}
+          className="h-3 rounded-full bg-primary"
         ></div>
       </div>
       {/* Subtitle */}

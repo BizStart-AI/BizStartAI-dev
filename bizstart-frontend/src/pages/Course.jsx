@@ -16,8 +16,7 @@ const Course = () => {
   useEffect(() => {
     const fetchModuleContent = async () => {
       try {
-        // Warning: Move this key to a .env file later for security
-        const genAI = new GoogleGenerativeAI("AIzaSyBg4lDgTf6HbClDxqmhWCWe5lTugaHnpws");
+        const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || "");
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
         // Inside fetchModuleContent in Course.jsx
@@ -58,7 +57,7 @@ const Course = () => {
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center min-h-screen text-gray-400">
-      <div className="w-8 h-8 border-4 border-[#6E62B1] border-t-transparent rounded-full animate-spin mb-4" />
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
       <p>Paddy is generating your syllabus...</p>
     </div>
   );
@@ -77,16 +76,16 @@ const Course = () => {
         <h1 className="text-xl font-bold mb-2 text-gray-800">{course.title}</h1>
         <p className="text-sm text-gray-500 mb-4">{course.description || "Personalized module for your business."}</p>
         <div className="flex gap-4 text-[10px] text-gray-500 mb-4 font-medium">
-          <span className="flex items-center gap-1"><BookOpen size={14} className="text-[#6E62B1]"/> {course.lessons || 6} Lessons</span>
-          <span className="flex items-center gap-1"><Clock size={14} className="text-[#6E62B1]"/> {course.duration || 30} Min</span>
-          <span className="flex items-center gap-1"><CheckCircle size={14} className="text-[#6E62B1]"/> 0/6 Completed</span>
+          <span className="flex items-center gap-1"><BookOpen size={14} className="text-primary"/> {course.lessons || 6} Lessons</span>
+          <span className="flex items-center gap-1"><Clock size={14} className="text-primary"/> {course.duration || 30} Min</span>
+          <span className="flex items-center gap-1"><CheckCircle size={14} className="text-primary"/> 0/6 Completed</span>
         </div>
         <div className="flex justify-between items-center text-[10px] mb-1 font-semibold text-gray-400">
           <span>Module Progress</span>
-          <span className="text-[#6E62B1]">0%</span>
+          <span className="text-primary">0%</span>
         </div>
         <div className="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
-          <div className="bg-[#6E62B1] h-full w-[2%]" />
+          <div className="bg-primary h-full w-[2%]" />
         </div>
       </div>
 
@@ -125,7 +124,7 @@ const Course = () => {
                       resources: details.resources 
                     } 
                   })}
-                  className="bg-[#5EB16E] text-white px-5 py-2 cursor-pointer rounded-xl text-sm font-bold shadow-sm active:scale-95 active:bg-[#4e9a5b] transition-all"
+                  className="bg-primary text-white px-5 py-2 cursor-pointer rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-all"
                 >
                   Start
                 </button>

@@ -44,8 +44,7 @@ const Welcome = () => {
               </span>
               
               <div 
-                style={{ background: 'linear-gradient(90deg, #6E62B1 0%, #333333 100%)' }}
-                className="w-10 h-10 rounded-full flex items-center justify-center shadow-md"
+                className="w-10 h-10 rounded-full flex items-center justify-center shadow-md bg-linear-to-r from-primary to-dark"
               >
                 <span style={{ fontFamily: "'Jacques Francois', serif", fontSize: '20px', color: 'white' }}>
                   AI
@@ -68,27 +67,25 @@ const Welcome = () => {
             style={{ 
               fontFamily: "'Inter', sans-serif",
               fontSize: '11px',
-              color: '#94a3b8',
               textAlign: 'center',
             }}
-            className="w-full"
+            className="w-full text-gray-400"
           >
             By continuing, you agree to our{' '}
-            <a href="#" className="text-[#6E62B1] hover:underline">Terms</a> and <a href="#" className="text-[#6E62B1] hover:underline">Privacy Policy</a>.
+            <a href="#" className="text-primary hover:underline">Terms</a> and <a href="#" className="text-primary hover:underline">Privacy Policy</a>.
           </p>
           
           <button 
             onClick={handleContinue}
             disabled={isLoading}
             style={{ 
-              backgroundColor: '#6E62B1',
               fontFamily: "'Inter', sans-serif",
               fontWeight: '500',
               fontSize: '15px',
               textShadow: '0px 1px 4px rgba(0, 0, 0, 0.40)',
               boxShadow: '0px 4px 10px rgba(110, 98, 177, 0.2)'
             }}
-            className="w-full text-white py-4 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer border-none outline-none"
+            className="w-full text-white py-4 rounded-xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 cursor-pointer border-none outline-none bg-primary"
           >
             {isLoading ? (
               <>

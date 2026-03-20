@@ -38,7 +38,7 @@ const BusinessJourneyScreen = () => {
           </div>
 
           {/* Subtext - Now stays close to header */}
-          <p className="font-sans font-light text-[14px] leading-[150%] text-center text-[#64748b] mb-0">
+          <p className="font-sans font-light text-[14px] leading-[150%] text-center text-gray-500 mb-0">
             Tell me where you are so i can <br />
             personalize your experience!
           </p>

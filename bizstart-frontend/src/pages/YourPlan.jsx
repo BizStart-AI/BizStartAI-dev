@@ -1,13 +1,11 @@
 import React from "react";
 import PageWrapper from "../components/PageWrapper";
 
-const PRIMARY = "#6E62B1";
-
 export default function PlanReady() {
   return (
     <PageWrapper>
 
-      <div className="bg-[#6E62B1] text-white p-6 rounded-xl text-center mb-6">
+      <div className="bg-primary text-white p-6 rounded-xl text-center mb-6">
         <div className="text-2xl mb-2">✅</div>
         <h2 className="font-semibold text-lg">
           Plan Generated!
@@ -19,8 +17,7 @@ export default function PlanReady() {
 
       <div className="flex gap-3 mb-6">
         <button
-          className="flex-1 py-3 rounded-xl text-white"
-          style={{ background: PRIMARY }}
+          className="flex-1 py-3 rounded-xl text-white bg-primary"
         >
           Preview PDF
         </button>

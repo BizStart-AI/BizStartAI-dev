@@ -2,8 +2,6 @@ import React from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const PRIMARY = "#6E62B1";
-
 export default function EditSection() {
   const navigate = useNavigate();
 
@@ -12,7 +10,7 @@ export default function EditSection() {
       <div className="w-full max-w-md bg-white flex flex-col h-screen">
 
         {/* Header */}
-        <div className="sticky top-0 bg-white px-6 py-4 border-b flex items-center justify-center relative">
+        <div className="sticky top-0 bg-white px-6 py-4 border-b flex items-center justify-center">
           <button onClick={() => navigate(-1)} className="absolute left-6 p-2 bg-gray-100 rounded-xl">
             <ArrowLeft size={20} />
           </button>
@@ -35,8 +33,7 @@ export default function EditSection() {
           />
 
           <button
-            className="w-full mt-6 py-3 rounded-xl text-white font-medium"
-            style={{ backgroundColor: PRIMARY }}
+            className="w-full mt-6 py-3 rounded-xl text-white font-medium bg-primary"
           >
             Save Changes
           </button>

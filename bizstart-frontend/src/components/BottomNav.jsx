@@ -1,16 +1,17 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-
-const PRIMARY = "#6E62B1";
+import { GoHome } from "react-icons/go";
+import { FaBriefcase, FaUser } from "react-icons/fa6";
+import { RiRobot2Line } from "react-icons/ri";
 
 export default function BottomNav() {
   const location = useLocation();
 
   const navItems = [
-    { label: "Home", icon: "🏠", path: "/dashboard" },
-    { label: "Tools", icon: "🧰", path: "/tools" },
-    { label: "AI Mentor", icon: "🤖", path: "/chat" },
-    { label: "Profile", icon: "👤", path: "/profile" },
+    { label: "Home", icon: <GoHome size={22} />, path: "/dashboard" },
+    { label: "Tools", icon: <FaBriefcase size={20} />, path: "/tools" },
+    { label: "AI Mentor", icon: <RiRobot2Line size={22} />, path: "/chat" },
+    { label: "Profile", icon: <FaUser size={20} />, path: "/profile" },
   ];
 
   return (
@@ -40,11 +41,11 @@ function NavItem({ label, icon, active, path }) {
   return (
     <Link
       to={path}
-      className={`flex flex-col items-center gap-0.5 transition-all active:scale-95 ${
-        active ? "text-[#6c60b0]" : "text-gray-400"
+      className={`flex flex-col items-center gap-1 transition-all active:scale-95 ${
+        active ? "text-primary" : "text-gray-400"
       }`}
     >
-      <span className="text-lg">{icon}</span>
+      {icon}
       <span className={`text-[9px] ${active ? "font-bold" : "font-medium"}`}>
         {label}
       </span>

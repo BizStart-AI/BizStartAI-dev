@@ -1,13 +1,11 @@
 import React from "react";
 
-const PRIMARY = "#6E62B1";
-
 export default function PageWrapper({ children }) {
   return (
-    <div className="min-h-screen bg-[#F6F7FB] flex">
+    <div className="min-h-screen bg-gray-50 flex">
 
       {/* Left Branding Panel — Desktop Only */}
-      <div className="hidden lg:flex flex-1 bg-[#6E62B1] text-white p-12 flex-col justify-center">
+      <div className="hidden lg:flex flex-1 bg-primary text-white p-12 flex-col justify-center">
         <h1 className="text-4xl font-bold mb-6">
           BizStart AI
         </h1>

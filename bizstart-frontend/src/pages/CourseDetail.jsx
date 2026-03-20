@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ChevronLeft, Download } from "lucide-react"; // Added Download icon
 
@@ -10,14 +10,24 @@ import { ChevronLeft, Download } from "lucide-react"; // Added Download icon
 const CourseDetail = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [videoUrl, setVideoUrl] = useState(null);
-  const [loadingVideo, setLoadingVideo] = useState(false);  
+
+  // Destructure data, including the AI-generated 'resources' array
+  const { lesson, youtubeId, courseTitle, totalLessons, resources } = location.state || {};
   
   // NEW: State for toggling between Content, Resources, and Notes
   const [activeTab, setActiveTab] = useState("content");
   
-  // Destructure data, including the AI-generated 'resources' array
-  const { lesson, youtubeId, courseTitle, totalLessons, resources } = location.state || {};
+  // NEW: videoUrl is now derived via useMemo to avoid effect-based state updates
+  const videoUrl = React.useMemo(() => {
+    if (youtubeId) {
+      return `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`;
+    } else if (lesson?.title) {
+      return `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(
+        lesson.title + " tutorial"
+      )}`;
+    }
+    return null;
+  }, [lesson?.title, youtubeId]);
 
   // Guard clause: If someone navigates here directly without state, send them back
   if (!lesson) {
@@ -26,27 +36,13 @@ const CourseDetail = () => {
         <p className="text-gray-500">Lesson data not found.</p>
         <button 
           onClick={() => navigate(-1)} 
-          className="text-[#6E62B1] font-bold underline"
+          className="text-primary font-bold underline"
         >
           Go Back
         </button>
       </div>
     );
   }
-
-  useEffect(() => {
-    if (youtubeId) {
-      setVideoUrl(
-        `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`
-      );
-    } else if (lesson?.title) {
-      setVideoUrl(
-        `https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(
-          lesson.title + " tutorial"
-        )}`
-      );
-    }
-  }, [lesson.title, youtubeId]);
 
   // Calculate progress percentage based on current lesson ID
   const progressPercent = Math.round((lesson.id / (totalLessons || 6)) * 100);
@@ -73,11 +69,11 @@ const CourseDetail = () => {
         <div className="bg-white border border-gray-100 rounded-3xl p-6 shadow-sm">
           <div className="flex justify-between items-center mb-3">
             <span className="text-sm font-medium text-gray-400">Lesson Progress</span>
-            <span className="text-sm font-bold text-[#6E62B1]">{progressPercent}%</span>
+            <span className="text-sm font-bold text-primary">{progressPercent}%</span>
           </div>
           <div className="w-full bg-gray-100 h-3 rounded-full overflow-hidden">
             <div 
-              className="bg-[#6E62B1] h-full transition-all duration-700 ease-out" 
+              className="bg-primary h-full transition-all duration-700 ease-out" 
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -89,12 +85,8 @@ const CourseDetail = () => {
         {/* Video Section */}
         <div>
           <h2 className="text-lg font-bold text-gray-800 mb-4">{lesson.title}</h2>
-         <div className="relative aspect-video w-full rounded-3xl overflow-hidden bg-black shadow-lg">
-            {loadingVideo ? (
-                <div className="flex items-center justify-center h-full text-white text-sm">
-                Loading video...
-                </div>
-            ) : videoUrl ? (
+          <div className="relative aspect-video w-full rounded-3xl overflow-hidden bg-black shadow-lg">
+            {videoUrl ? (
                 <iframe
                 className="w-full h-full"
                 src={videoUrl}
@@ -115,19 +107,19 @@ const CourseDetail = () => {
         <div className="flex gap-3">
           <button 
             onClick={() => setActiveTab("content")}
-            className={`flex-1 py-3 rounded-xl font-semibold active:scale-95 transition-all ${activeTab === "content" ? "bg-[#6E62B1] text-white shadow-md" : "bg-white border border-gray-200 text-gray-500"}`}
+            className={`flex-1 py-3 rounded-xl font-semibold active:scale-95 transition-all ${activeTab === "content" ? "bg-primary text-white shadow-md" : "bg-white border border-gray-200 text-gray-500"}`}
           >
             Content
           </button>
           <button 
             onClick={() => setActiveTab("resources")}
-            className={`flex-1 py-3 rounded-xl font-semibold active:scale-95 transition-all text-sm ${activeTab === "resources" ? "bg-[#6E62B1] text-white shadow-md" : "bg-white border border-gray-200 text-gray-500"}`}
+            className={`flex-1 py-3 rounded-xl font-semibold active:scale-95 transition-all text-sm ${activeTab === "resources" ? "bg-primary text-white shadow-md" : "bg-white border border-gray-200 text-gray-500"}`}
           >
             Resources
           </button>
           <button 
             onClick={() => setActiveTab("notes")}
-            className={`flex-1 py-3 rounded-xl font-semibold active:scale-95 transition-all text-sm ${activeTab === "notes" ? "bg-[#6E62B1] text-white shadow-md" : "bg-white border border-gray-200 text-gray-500"}`}
+            className={`flex-1 py-3 rounded-xl font-semibold active:scale-95 transition-all text-sm ${activeTab === "notes" ? "bg-primary text-white shadow-md" : "bg-white border border-gray-200 text-gray-500"}`}
           >
             Notes
           </button>

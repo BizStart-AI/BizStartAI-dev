@@ -4,6 +4,8 @@ import { FaApple, FaLock, FaEnvelope, FaEyeSlash, FaEye, FaChevronLeft } from 'r
 import { useGoogleLogin } from '@react-oauth/google';
 import toast, { Toaster } from 'react-hot-toast';
 import api from '../api';
+import ENDPOINTS from '../api/endpoints';
+import handleError from '../utils/errorHandler';
 import PageWrapper from '../components/PageWrapper';
 import PrimaryButton from '../components/PrimaryButton';
 
@@ -19,18 +21,18 @@ const LoginScreen = () => {
     onSuccess: async (tokenResponse) => {
       try {
         // Send the ID token (not access_token) to your backend
-        const res = await api.post('/auth/google', {
-          credential: tokenResponse.id_token   // <-- CHANGE THIS
+        const res = await api.post(ENDPOINTS.GOOGLE_AUTH, {
+          credential: tokenResponse.id_token
         });
 
         if (res.data.success) {
           localStorage.setItem('token', res.data.token);
-          localStorage.setItem('userAccount', JSON.stringify(res.data.data)); // note: backend returns data
+          localStorage.setItem('userAccount', JSON.stringify(res.data.user)); 
           toast.success('Successfully logged in with Google!');
           setTimeout(() => navigate('/BusinessJourney'), 1000);
         }
       } catch (error) {
-        toast.error('Google login failed. Please try again.');
+        handleError(error, 'Google login failed. Please try again.');
       }
     },
     onError: () => toast.error('Google Login Failed. Please try again.'),
@@ -43,18 +45,17 @@ const LoginScreen = () => {
     }
 
     try {
-      const loginRes = await api.post('/auth/login', { email, password });
+      const loginRes = await api.post(ENDPOINTS.LOGIN, { email, password });
 
       if (loginRes.data.success) {
         localStorage.setItem('token', loginRes.data.token);
         localStorage.setItem('userAccount', JSON.stringify(loginRes.data.user));
 
-        toast.success('Login successful!');
+        toast.success('Welcome back! Login successful.');
         setTimeout(() => navigate('/BusinessJourney'), 1000);
       }
     } catch (err) {
-      const errorMsg = err.response?.data?.message || 'Login failed. Please check your credentials.';
-      toast.error(errorMsg);
+      handleError(err);
     }
   };
 
@@ -92,7 +93,7 @@ const LoginScreen = () => {
           </h1>
         </div>
 
-        <p className="font-sans font-light text-[13px] text-center text-[#666666] mb-8">
+        <p className="font-sans font-light text-[13px] text-center text-gray-500 mb-8">
           Your business paddy is ready to help
         </p>
 

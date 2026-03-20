@@ -29,7 +29,7 @@ const Profile = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FFFFFF] pb-24 font-sans">
+    <div className="min-h-screen bg-white pb-24 font-sans">
       {/* Header Area */}
       <div className="px-6 pt-12 text-center relative">
         <button
@@ -43,7 +43,7 @@ const Profile = () => {
 
         {/* Avatar Section */}
         <div className="mt-8 flex flex-col items-center">
-          <div className="w-24 h-24 bg-gray-200 rounded-full border-4 border-[#7C3AED] flex items-center justify-center mb-4">
+          <div className="w-24 h-24 bg-gray-200 rounded-full border-4 border-primary flex items-center justify-center mb-4">
             <User size={50} className="text-gray-400" />
           </div>
           <h3 className="text-lg font-bold text-gray-900">Sandra Eze</h3>
@@ -64,10 +64,10 @@ const Profile = () => {
           {menuItems.map((item, index) => (
             <div
               key={index}
-              className="flex items-center justify-between p-4 bg-[#F5F5F5] rounded-xl border border-gray-100 hover:bg-white transition-colors cursor-pointer group"
+              className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100 hover:bg-white transition-colors cursor-pointer group"
             >
               <div className="flex items-center gap-4 text-gray-700">
-                <span className="text-gray-600 group-hover:text-[#7C3AED] transition-colors">
+                <span className="text-gray-600 group-hover:text-primary transition-colors">
                   {item.icon}
                 </span>
                 <span className="font-medium">{item.label}</span>

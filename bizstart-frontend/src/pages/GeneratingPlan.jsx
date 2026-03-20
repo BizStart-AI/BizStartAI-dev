@@ -7,7 +7,7 @@ export default function GeneratingPlan() {
 
       <div className="flex flex-col items-center justify-center text-center py-12">
 
-        <div className="w-16 h-16 border-4 border-gray-200 border-t-[#6E62B1] rounded-full animate-spin mb-6" />
+        <div className="w-16 h-16 border-4 border-gray-200 border-t-primary rounded-full animate-spin mb-6" />
 
         <h2 className="text-xl font-semibold mb-2">
           Creating your Business Plan

@@ -1,21 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { ChevronLeft, BookOpen, Clock, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import BottomNav from "../components/BottomNav";
 
 const LearnPage = () => {
   const navigate = useNavigate();
-  const [recommendedCourses, setRecommendedCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Pull the same recommendations generated on the Dashboard
+  const [recommendedCourses] = useState(() => {
     const cache = localStorage.getItem('ai_lessons_cache');
-    if (cache) {
-      setRecommendedCourses(JSON.parse(cache));
-    }
-    setIsLoading(false);
-  }, []);
+    return cache ? JSON.parse(cache) : [];
+  });
+  const [isLoading] = useState(false);
 
   return (
     <div className="w-full min-h-screen bg-white flex justify-center overflow-auto pb-24 p-4">
@@ -60,10 +54,10 @@ const LearnPage = () => {
                     
                     <div className="flex items-center gap-4 text-[11px] text-gray-500 font-medium">
                         <span className="flex items-center gap-1">
-                        <BookOpen size={14} className="text-[#6E62B1]" /> {course.lessons} Lessons
+                        <BookOpen size={14} className="text-primary" /> {course.lessons} Lessons
                         </span>
                         <span className="flex items-center gap-1">
-                        <Clock size={14} className="text-[#6E62B1]" /> {course.duration} Minutes
+                        <Clock size={14} className="text-primary" /> {course.duration} Minutes
                         </span>
                         <span className="flex items-center gap-1">
                         <Star size={14} className="text-yellow-500" /> {course.level}
@@ -71,10 +65,9 @@ const LearnPage = () => {
                     </div>
                     </div>
 
-                    {/* FIX IS HERE: Changed lesson.id to idx or course.title and passed course in state */}
                     <button 
                     onClick={() => navigate(`/course/${encodeURIComponent(course.title)}`, { state: { course } })}
-                    className="bg-[#5EB16E] text-white px-4 py-1.5 rounded-lg text-sm font-semibold active:scale-95 transition-all"
+                    className="bg-primary text-white px-4 py-1.5 rounded-lg text-sm font-semibold active:scale-95 transition-all"
                     >
                     Start
                     </button>

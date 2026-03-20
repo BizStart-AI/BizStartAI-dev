@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Bell } from "lucide-react";
 import Logo from "../assets/bizstart-ai.png";
 import BottomNav from "../components/BottomNav";
-import api from "../api";
+import { FaRegFileLines, FaBookOpen, FaRegClock } from "react-icons/fa6";
+import { RiRobot2Line } from "react-icons/ri";
 
 // Mock data
 const userProgress = {
@@ -11,9 +12,9 @@ const userProgress = {
   totalModules: 8,
   progressPercent: 37,
   summary: [
-    { value: "45%", icon: "📄", label: "Business Plan" },
-    { value: 12, icon: "📚", label: "Lessons Done" },
-    { value: 5, icon: "🤖", label: "AI Sessions" },
+    { value: "45%", icon: <FaRegFileLines />, label: "Business Plan" },
+    { value: 12, icon: <FaBookOpen />, label: "Lessons Done" },
+    { value: 5, icon: <RiRobot2Line />, label: "AI Sessions" },
   ],
   courses: [
     {
@@ -90,11 +91,11 @@ const InProgressCourseCard = ({ title, description, completedLessons, totalLesso
           style={{ width: `${progressPercent}%` }}
         ></div>
       </div>
-      <div className="flex justify-between text-xs text-gray-500 mt-2">
+      <div className="flex justify-between text-xs text-gray-500 mt-2 items-center">
         <span>
           Lessons: {completedLessons}/{totalLessons}
         </span>
-        <span>⏱ {duration} mins</span>
+        <span className="flex items-center gap-1"><FaRegClock /> {duration} mins</span>
       </div>
     </div>
   );

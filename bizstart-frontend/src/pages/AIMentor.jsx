@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { Bell, Mic, Send, Home, Briefcase, MessageSquare, User } from "lucide-react";
 import Logo from "../assets/bizstart-ai.png";
 import api from "../api";
+import ENDPOINTS from "../api/endpoints";
+import handleError from "../utils/errorHandler";
 import BottomNav from "../components/BottomNav";
-
-const PRIMARY = "#6E62B1";
 
 const ChatHeader = () => (
   <div className="flex items-center justify-between sticky top-0 bg-white z-10 py-3 px-4 shadow-md">
     <img src={Logo} alt="BizStart AI" className="h-10 object-contain" />
-    <Bell stroke={PRIMARY} size={22} />
+    <Bell className="text-primary" size={22} />
   </div>
 );
 
@@ -76,15 +76,15 @@ const AIMentor = () => {
         const savedData = JSON.parse(localStorage.getItem('userAccount') || '{"name": "Sandra"}');
 
         // Fetch existing conversations
-        const convRes = await api.get('/conversations');
+        const convRes = await api.get(ENDPOINTS.CONVERSATIONS);
         let currentConvId = null;
 
-        if (convRes.data && convRes.data.length > 0) {
+        if (convRes.data?.data && convRes.data.data.length > 0) {
           // Pick the first/latest conversation
-          currentConvId = convRes.data[0].id;
+          currentConvId = convRes.data.data[0].id;
         } else {
           // Create new conversation if none exist
-          const createRes = await api.post('/conversations', { title: "Business Idea Discussion" });
+          const createRes = await api.post(ENDPOINTS.CONVERSATIONS, { title: "Business Idea Discussion" });
           currentConvId = createRes.data?.data?.id || createRes.data?.id;
         }
 
@@ -92,11 +92,11 @@ const AIMentor = () => {
 
         // Fetch past messages
         if (currentConvId) {
-          const msgRes = await api.get(`/messages/${currentConvId}?limit=50`);
-          if (msgRes.data && msgRes.data.length > 0) {
-            const fetchedMessages = msgRes.data.map(m => ({
-              sender: m.role || (m.isAi ? 'ai' : 'user'), // Map backend fields to sender 'user' or 'ai'
-              text: m.content || m.text
+          const msgRes = await api.get(ENDPOINTS.GET_MESSAGES(currentConvId) + '?limit=50');
+          if (msgRes.data?.data && msgRes.data.data.length > 0) {
+            const fetchedMessages = msgRes.data.data.map(m => ({
+              sender: m.role === 'assistant' ? 'ai' : 'user', 
+              text: m.content
             }));
             setMessages(fetchedMessages);
           } else {
@@ -125,18 +125,17 @@ const AIMentor = () => {
 
     try {
       // Direct integration with backend API
-      const res = await api.post('/messages', {
+      const res = await api.post(ENDPOINTS.MESSAGES, {
         conversation_id: conversationId,
         content: msg
       });
 
-      const aiResponse = res.data?.data?.aiMessage;
-      const responseText = aiResponse?.text || aiResponse?.content || res.data?.text || "I'm sorry, I encountered an issue processing that.";
+      const responseText = res.data?.data?.aiMessage?.content || "I'm sorry, I encountered an issue processing that.";
 
       setMessages(prev => [...prev, { sender: "ai", text: responseText }]);
     } catch (e) {
-      console.error("Error sending message to backend:", e);
-      setMessages(prev => [...prev, { sender: "ai", text: "Oops, something went wrong connecting to my brain! Ensure your backend is running." }]);
+      handleError(e, "Oops, something went wrong connecting to my brain! Ensure your backend is running.");
+      setMessages(prev => [...prev, { sender: "ai", text: "I'm having trouble connecting right now." }]);
     } finally {
       setIsTyping(false);
     }

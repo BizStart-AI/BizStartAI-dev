@@ -1,4 +1,4 @@
-import React from "react";
+import { FaRegClock } from "react-icons/fa6";
 
 const InProgressCourseCard = ({ title, description, completedLessons, totalLessons, duration }) => {
   const progressPercent = (completedLessons / totalLessons) * 100;
@@ -11,14 +11,14 @@ const InProgressCourseCard = ({ title, description, completedLessons, totalLesso
       {/* Progress Bar */}
       <div className="mt-3 bg-gray-200 rounded-full h-2 w-full">
         <div
-          style={{ width: `${progressPercent}%`, backgroundColor: "#6E62B1" }}
-          className="h-2 rounded-full"
+          style={{ width: `${progressPercent}%` }}
+          className="h-2 rounded-full bg-primary"
         ></div>
       </div>
 
-      <div className="flex justify-between text-xs text-gray-500 mt-2">
+      <div className="flex justify-between text-xs text-gray-500 mt-2 items-center">
         <span>Lessons: {completedLessons}/{totalLessons}</span>
-        <span>⏱ {duration} mins</span>
+        <span className="flex items-center gap-1"><FaRegClock /> {duration} mins</span>
       </div>
     </div>
   );
