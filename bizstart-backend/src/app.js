@@ -15,6 +15,7 @@ const aiRoutes = require('./routes/ai.routes');
 const progressRoutes = require('./routes/progress.routes');
 
 const app = express();
+app.set('trust proxy', 1);
 
 // setup cors to allow postman/mobile and specific frontend
 app.use(
