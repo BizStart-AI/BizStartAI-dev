@@ -15,7 +15,7 @@ const apiLimiter = rateLimit({
 // Strict limiter for AI message endpoint
 const messageLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // 20 message sends per 15 mins per IP
+  max: 100, // 20 message sends per 15 mins per IP
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res, next) => {

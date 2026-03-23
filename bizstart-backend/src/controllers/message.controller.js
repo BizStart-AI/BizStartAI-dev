@@ -47,11 +47,8 @@ const sendMessage = async (req, res, next) => {
       content: msg.content,
     }));
 
-    // Retrieve RAG context
-    const context = retrieveContext(content);
-
-    // Call AI service
-    const aiResult = await generateAIResponse(formattedMessages, context);
+    // Call AI service (removed context since it was undefined and crashing the app)
+    const aiResult = await generateAIResponse(formattedMessages);
 
     // Save AI response
     const aiMessage = await Message.create({
