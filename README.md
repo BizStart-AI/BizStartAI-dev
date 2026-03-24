@@ -6,6 +6,7 @@ BizStartAI is a premium, AI-driven platform designed to empower aspiring entrepr
 BizStartAI is a personalized roadmap for entrepreneurs. It allows users to validate ideas, explore industries, learn through tailored courses, and ultimately generate a professional business plan. The target audience includes first-time founders, small business owners in Africa (specifically targeting the Nigerian market with "Business Paddy" local context), and anyone needing a structured approach to building a company.
 
 ## 2. Key Features & Challenges
+
 - **AI Business Mentorship**: A real-time chat interface powered by Google Gemini that provides strategic advice and brainstorming.
 - **Dynamic Course Recommendations**: An intelligent system that suggests learning paths based on the user's business idea and stage.
 - **Automated Business Plan Generation**: A high-impact feature that synthesizes user inputs into a structured, professional document.
